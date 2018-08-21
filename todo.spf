@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ContentFilters</key>
+	<dict/>
+	<key>auto_connect</key>
+	<true/>
+	<key>data</key>
+	<dict>
+		<key>connection</key>
+		<dict>
+			<key>database</key>
+			<string>todo</string>
+			<key>host</key>
+			<string>127.0.0.1</string>
+			<key>kcid</key>
+			<string>7558372935496247408</string>
+			<key>name</key>
+			<string>New Favorite</string>
+			<key>port</key>
+			<integer>3306</integer>
+			<key>rdbms_type</key>
+			<string>mysql</string>
+			<key>sslCACertFileLocation</key>
+			<string></string>
+			<key>sslCACertFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslCertificateFileLocation</key>
+			<string></string>
+			<key>sslCertificateFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslKeyFileLocation</key>
+			<string></string>
+			<key>sslKeyFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>type</key>
+			<string>SPTCPIPConnection</string>
+			<key>useSSL</key>
+			<integer>0</integer>
+			<key>user</key>
+			<string>root</string>
+		</dict>
+		<key>session</key>
+		<dict>
+			<key>connectionEncoding</key>
+			<string>utf8</string>
+			<key>contentPageNumber</key>
+			<integer>1</integer>
+			<key>contentSelection</key>
+			<data>
+			YnBsaXN0MDDUAQIDBAUGJCVYJHZlcnNpb25YJG9iamVjdHNZJGFy
+			Y2hpdmVyVCR0b3ASAAGGoKgHCBMUFRYaIVUkbnVsbNMJCgsMDxJX
+			TlMua2V5c1pOUy5vYmplY3RzViRjbGFzc6INDoACgAOiEBGABIAF
+			gAdUdHlwZVRyb3dzXxAdU2VsZWN0aW9uRGV0YWlsVHlwZU5TSW5k
+			ZXhTZXTSFwsYGVxOU1JhbmdlQ291bnQQAIAG0hscHR5aJGNsYXNz
+			bmFtZVgkY2xhc3Nlc1pOU0luZGV4U2V0oh8gWk5TSW5kZXhTZXRY
+			TlNPYmplY3TSGxwiI1xOU0RpY3Rpb25hcnmiIiBfEA9OU0tleWVk
+			QXJjaGl2ZXLRJidUZGF0YYABAAgAEQAaACMALQAyADcAQABGAE0A
+			VQBgAGcAagBsAG4AcQBzAHUAdwB8AIEAoQCmALMAtQC3ALwAxwDQ
+			ANsA3gDpAPIA9wEEAQcBGQEcASEAAAAAAAACAQAAAAAAAAAoAAAA
+			AAAAAAAAAAAAAAABIw==
+			</data>
+			<key>contentSortColIsAsc</key>
+			<true/>
+			<key>contentViewport</key>
+			<string>{{0, 0}, {1226, 760}}</string>
+			<key>isToolbarVisible</key>
+			<true/>
+			<key>queries</key>
+			<string>CREATE TABLE `todo_task` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`content` text,
+	`created_at` int(11) DEFAULT NULL,
+  	`created_by` varchar(100) DEFAULT '' COMMENT '创建人',
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  	`modified_by` varchar(255) DEFAULT '' COMMENT '修改人',
+  	`state` tinyint(3) unsigned DEFAULT '1' COMMENT '状态 0为完成1为未完成',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单';
+
+
+
+
+CREATE TABLE `todo_auth` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) DEFAULT '' COMMENT '用户名',
+  `created_at` int(11) DEFAULT NULL,
+  `modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+select * from todo_task
+
+
+# 创建 user
+
+CREATE TABLE `todo_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` varchar(50) NOT NULL,
+  `nick_name` varchar(50) DEFAULT '' COMMENT '昵称',
+  `email` varchar(50) DEFAULT '' COMMENT '邮箱',
+  `password` varchar(50) DEFAULT '' COMMENT '密码',
+  `created_at` int(11) DEFAULT NULL COMMENT '创建时间',
+  `modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8  COMMENT='用户信息';
+
+INSERT INTO `todo_user` ( `nick_name`, `email`,`password`) VALUES ( 'Jason','jason@qq.com', '123456');
+
+
+SELECT * FROM `todo_user`  WHERE `todo_user`.`deleted_at` IS NULL AND ((email = 'zhangsan@qq.com' AND deleted_at = '0' ))
+
+
+
+
+
+# Task 任务表
+
+CREATE TABLE `todo_todo` (
+	`id` VARCHAR(100)  NOT NULL,
+	`user_id` varchar(50) COMMENT '用户ID',
+	`name` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`completed` boolean DEFAULT false,
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单';
+
+
+
+
+
+# Urgency 紧急状态表
+
+CREATE TABLE `todo_urgency` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`text` varchar(100) DEFAULT '' COMMENT '状态名称',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='紧急状态';
+
+
+# Category 任务分类
+
+CREATE TABLE `todo_category` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`text` varchar(100) DEFAULT '' COMMENT '任务名称',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务分类';
+
+# Timing
+CREATE TABLE `todo_timing` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`text` varchar(100) DEFAULT '' COMMENT '任务名称',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务分类';
+
+
+
+
+</string>
+			<key>view</key>
+			<string>SP_VIEW_CUSTOMQUERY</string>
+			<key>windowVerticalDividerPosition</key>
+			<real>214</real>
+		</dict>
+	</dict>
+	<key>encrypted</key>
+	<false/>
+	<key>format</key>
+	<string>connection</string>
+	<key>queryFavorites</key>
+	<array/>
+	<key>queryHistory</key>
+	<array>
+		<string># Task 任务表
+
+CREATE TABLE `todo_todo` (
+	`id` VARCHAR(100)  NOT NULL,
+	`user_id` varchar(50) COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`completed` boolean DEFAULT false,
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` VARCHAR(100)  NOT NULL,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`completed` boolean DEFAULT false,
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` VARCHAR(100)  NOT NULL,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+ 	`url` varchar(255) ,
+  	`completed` boolean DEFAULT false,
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` VARCHAR(100)  NOT NULL,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+ 	`url` varchar(255) ,
+  	`completed` boolean DEFAULT false,
+	`created_at` int(11) DEFAULT NULL,
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` VARCHAR(100)  NOT NULL,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`completed` boolean DEFAULT false,
+	`created_at` int(11) DEFAULT NULL,
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` VARCHAR(50)  NOT NULL,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`completed` boolean DEFAULT false,
+	`created_at` int(11) DEFAULT NULL,
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` VARCHAR(50) unsigned  NOT NULL,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`completed` boolean DEFAULT false,
+	`created_at` int(11) DEFAULT NULL,
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`completed` boolean DEFAULT false,
+	`created_at` int(11) DEFAULT NULL,
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`completed` boolean DEFAULT 'false',
+ 
+	`created_at` int(11) DEFAULT NULL,
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`completed` boolean unsigned DEFAULT 'false',
+  	
+	`created_at` int(11) DEFAULT NULL,
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`completed` BOOL unsigned DEFAULT 'false',
+  	
+	`created_at` int(11) DEFAULT NULL,
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`completed` BOOL unsigned DEFAULT false,
+  	
+	`created_at` int(11) DEFAULT NULL,
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` varchar(50) NOT NULL,
+  `nick_name` varchar(50) DEFAULT '' COMMENT '昵称',
+  `email` varchar(50) DEFAULT '' COMMENT '邮箱',
+  `password` varchar(50) DEFAULT '' COMMENT '密码',
+  `created_at` int(11) DEFAULT NULL COMMENT '创建时间',
+  `modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8  COMMENT='用户信息'</string>
+		<string>REATE TABLE `todo_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` varchar(50) NOT NULL,
+  `nick_name` varchar(50) DEFAULT '' COMMENT '昵称',
+  `email` varchar(50) DEFAULT '' COMMENT '邮箱',
+  `password` varchar(50) DEFAULT '' COMMENT '密码',
+  `created_at` int(11) DEFAULT NULL COMMENT '创建时间',
+  `modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8  COMMENT='用户信息'</string>
+		<string>SELECT * FROM todo_user where email="zhangsan@qq.com"</string>
+		<string>SELECT * FROM todo_user where email=zhangsan@qq.com</string>
+		<string>CREATE TABLE `todo_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `u_id` varchar(50) NOT NULL,
+  `nick_name` varchar(50) DEFAULT '' COMMENT '昵称',
+  `email` varchar(50) DEFAULT '' COMMENT '邮箱',
+  `password` varchar(50) DEFAULT '' COMMENT '密码',
+  `created_at` int(11) DEFAULT NULL COMMENT '创建时间',
+  `modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8  COMMENT='用户信息'</string>
+		<string>CREATE TABLE `todo_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `u_id` varchar(255) unsigned NOT NULL,
+  `nick_name` varchar(50) DEFAULT '' COMMENT '昵称',
+  `email` varchar(50) DEFAULT '' COMMENT '邮箱',
+  `password` varchar(50) DEFAULT '' COMMENT '密码',
+  `created_at` int(11) DEFAULT NULL COMMENT '创建时间',
+  `modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8  COMMENT='用户信息'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`state` tinyint(3) unsigned DEFAULT '1' COMMENT '状态 0为完成 1为未完成',
+  	
+  	
+	`created_at` int(11) DEFAULT NULL,
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+  	`deleted_at` int(11) DEFAULT NULL,
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+		<string>CREATE TABLE `todo_todo` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`user_id` int(10) unsigned DEFAULT '0' COMMENT '用户ID',
+	`title` varchar(100) DEFAULT '' COMMENT '任务标题',
+ 	`desc` varchar(255) DEFAULT '' COMMENT '描述',
+  	`state` tinyint(3) unsigned DEFAULT '1' COMMENT '状态 0为完成 1为未完成',
+  	
+  	`urgency` varchar(255) DEFAULT '' COMMENT '任务紧急度',
+  	`category` varchar(255) DEFAULT '' COMMENT '任务分类',	
+  	
+	`created_at` int(11) DEFAULT NULL,
+  	`modified_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
+
+  	 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务清单'</string>
+	</array>
+	<key>rdbms_type</key>
+	<string>mysql</string>
+	<key>rdbms_version</key>
+	<string>5.7.21</string>
+	<key>version</key>
+	<integer>1</integer>
+</dict>
+</plist>

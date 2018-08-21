@@ -4,6 +4,7 @@ import (
 	"Gin-Todo/pkg/setting"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/jinzhu/gorm"
 
@@ -11,7 +12,7 @@ import (
 )
 
 type Model struct {
-	ID         int `gorm:"primary_key" json:"id"`
+	ID         int `gorm:"primary_key"`
 	CreatedAt  int `json:"created_at"`
 	ModifiedAt int `json:"modified_at"`
 }
@@ -53,9 +54,48 @@ func init() {
 	db.SingularTable(true)
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
+	db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
+	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
+	db.DB().SetMaxIdleConns(10)
+	db.DB().SetMaxOpenConns(100)
+	db.LogMode(true)
 
 }
 
 func Clone() {
 	defer db.Close()
+}
+
+func updateTimeStampForCreateCallback(scope *gorm.Scope) {
+	if !scope.HasError() {
+		nowTime := time.Now().Unix()
+		if createTimeField, ok := scope.FieldByName("CreatedAt"); ok {
+			if createTimeField.IsBlank {
+				createTimeField.Set(nowTime)
+			}
+		}
+
+		if modifyTimeField, ok := scope.FieldByName("ModifiedAt"); ok {
+			if modifyTimeField.IsBlank {
+				modifyTimeField.Set(nowTime)
+			}
+		}
+	}
+}
+
+func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
+	if _, ok := scope.Get("gorm:update_column"); !ok {
+		scope.SetColumn("ModifiedAt", time.Now().Unix())
+	}
+}
+
+type AuthenticateRequest struct {
+	NickName string `json:"nick_name" valid:"MaxSize(26)"`
+	Email    string `json:"email" valid:"Email; MaxSize(50)"`
+	Password string `json:"password" valid:"Required; MaxSize(50)"`
+}
+
+type AuthenticateResponse struct {
+	User
+	Token string `json:"token"`
 }

@@ -1,6 +1,7 @@
 package util
 
 import (
+	"Gin-Todo/models"
 	"Gin-Todo/pkg/setting"
 	"time"
 
@@ -10,21 +11,19 @@ import (
 var jwtSecret = []byte(setting.JwtSecret)
 
 type Claims struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	models.User
 	jwt.StandardClaims
 }
 
-func GenerateToken(email, password string) (string, error) {
+func GenerateToken(user models.User) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(3 * time.Hour)
 
 	claims := Claims{
-		email,
-		password,
+		user,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
-			Issuer:    "gin-todo",
+			Issuer:    "todo",
 		},
 	}
 

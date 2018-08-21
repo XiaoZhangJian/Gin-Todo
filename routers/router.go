@@ -1,7 +1,6 @@
 package routers
 
 import (
-	"Gin-Todo/middleware/jwt"
 	"Gin-Todo/pkg/setting"
 	"Gin-Todo/routers/api"
 	"Gin-Todo/routers/api/v1"
@@ -11,26 +10,28 @@ import (
 
 func InitRouter() *gin.Engine {
 	r := gin.New()
-
 	r.Use(gin.Logger())
-
 	r.Use(gin.Recovery())
-
 	gin.SetMode(setting.RunMode)
 
-	r.GET("/auth", api.GetAuth)
-
+	r.GET("/auth", api.AuthenticateUser)
+	r.POST("/register", api.RegisterNewUser)
 	apiv1 := r.Group("/api/v1")
-	apiv1.Use(jwt.JWT())
+	// apiv1.Use(jwt.JWT())
 	{
+		// 用户操作
+		apiv1.GET("/users/:id", api.GetUser)
+		apiv1.PUT("/users/:id", api.EditUser)
+
 		//获取任务
-		apiv1.GET("/tasks", v1.GetTasks)
+		apiv1.GET("/todos", v1.GetTodos)
+		apiv1.GET("/todos/:id", v1.GetTodo)
 		//新建任务
-		apiv1.POST("/tasks", v1.AddTask)
+		apiv1.POST("/todos", v1.AddTodo)
 		//更新指定任务
-		apiv1.PUT("/tasks/:id", v1.EditTask)
+		apiv1.PUT("/todos/:id", v1.EditTodo)
 		//删除指定任务
-		apiv1.DELETE("/tasks/:id", v1.DeleteTask)
+		apiv1.DELETE("/todos/:id", v1.DelTodo)
 	}
 
 	return r

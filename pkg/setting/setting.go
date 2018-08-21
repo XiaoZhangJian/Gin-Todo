@@ -16,6 +16,12 @@ var (
 	RunMode      string
 	JwtSecret    string
 	PageSize     int
+
+	LogSavePath     string
+	LogSaveName     string
+	LogFileExt      string
+	TimeFormat      string
+	RuntimeRootPath string
 )
 
 func init() {
@@ -24,15 +30,17 @@ func init() {
 	if err != nil {
 		log.Fatalf("fail to read file %v \n", err)
 	}
+
 	LoadBase()
-	loadServe()
+	LoadServe()
+	LoadApp()
 }
 
 func LoadBase() {
 	RunMode = Cfg.Section("").Key("RUN_MODE").MustString("debug")
 }
 
-func loadServe() {
+func LoadServe() {
 	sec, err := Cfg.GetSection("server")
 	if err != nil {
 		log.Fatalf("fail to get section 'server' : %v", err)
@@ -51,4 +59,10 @@ func LoadApp() {
 	}
 	JwtSecret = sec.Key("JWT_SECRET").MustString("!@#$!@#$!@#$!@#$")
 	PageSize = sec.Key("PAGE_SIZE").MustInt(10)
+	RuntimeRootPath = sec.Key("RuntimeRootPath").MustString("runtime/")
+	LogSavePath = sec.Key("LogSavePath").MustString("logs/")
+	LogSaveName = sec.Key("LogSaveName").MustString("log")
+	LogFileExt = sec.Key("LogFileExt").MustString("log")
+	TimeFormat = sec.Key("TimeFormat").MustString("20060102")
+
 }
