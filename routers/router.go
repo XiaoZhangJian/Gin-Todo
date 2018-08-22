@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"Gin-Todo/middleware/jwt"
 	"Gin-Todo/pkg/setting"
 	"Gin-Todo/routers/api"
 	"Gin-Todo/routers/api/v1"
@@ -9,19 +10,24 @@ import (
 )
 
 func InitRouter() *gin.Engine {
+	gin.Default()
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	gin.SetMode(setting.RunMode)
 
-	r.GET("/auth", api.AuthenticateUser)
-	r.POST("/register", api.RegisterNewUser)
+	// r.GET("/auth/login", api.AuthGitHub)
+	// r.GET("/mainpage", api.GetInfo)
+
+	r.GET("/login", api.Login)
+	r.POST("/reg", api.Register)
+
 	apiv1 := r.Group("/api/v1")
-	// apiv1.Use(jwt.JWT())
+	apiv1.Use(jwt.JWT())
 	{
 		// 用户操作
-		apiv1.GET("/users/:id", api.GetUser)
-		apiv1.PUT("/users/:id", api.EditUser)
+		// apiv1.GET("/users/:id", api.GetUser)
+		// apiv1.PUT("/users/:id", api.EditUser)
 
 		//获取任务
 		apiv1.GET("/todos", v1.GetTodos)

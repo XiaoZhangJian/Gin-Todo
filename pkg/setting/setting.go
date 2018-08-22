@@ -22,6 +22,8 @@ var (
 	LogFileExt      string
 	TimeFormat      string
 	RuntimeRootPath string
+	GitHubClientKey string
+	GitHubSecretKey string
 )
 
 func init() {
@@ -64,5 +66,7 @@ func LoadApp() {
 	LogSaveName = sec.Key("LogSaveName").MustString("log")
 	LogFileExt = sec.Key("LogFileExt").MustString("log")
 	TimeFormat = sec.Key("TimeFormat").MustString("20060102")
+	GitHubClientKey = sec.Key("GITHUB_CLIENT_KEY").String()
+	GitHubSecretKey = sec.Key("GITHUB_SECRET_KEY").String()
 
 }

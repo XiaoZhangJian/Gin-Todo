@@ -5,8 +5,7 @@ import (
 	"Gin-Todo/pkg/app"
 	"Gin-Todo/pkg/e"
 	"Gin-Todo/pkg/util"
-	"fmt"
-	"log"
+	"Gin-Todo/service/auth_service"
 	"net/http"
 
 	"github.com/Unknwon/com"
@@ -14,87 +13,82 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterNewUser(c *gin.Context) {
+type LoginResult struct {
+	User  *models.User
+	Token string
+}
+
+func Register(c *gin.Context) {
 
 	appG := app.Gin{c}
-
 	name := c.Query("nick_name")
 	email := c.Query("email")
 	pwd := c.Query("password")
-
 	valid := validation.Validation{}
-	auth := models.AuthenticateRequest{
-		NickName: name,
-		Email:    email,
-		Password: pwd,
-	}
-	ok, _ := valid.Valid(&auth)
-	if !ok {
+	valid.Required(name, "nick_name").Message("用户名不能为空")
+	valid.Email(email, "email").Message("邮件格式不正确")
+	valid.Required(pwd, "password").Message("密码输入不正确")
+
+	if !valid.HasErrors() {
 		app.MarkErrors(valid.Errors)
 		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
 		return
 	}
-
-	if models.ExistUserByEmail(email) {
+	authService := auth_service.User{
+		NickName: name,
+		Email:    email,
+		Pwd:      pwd,
+	}
+	if authService.ExistByEmail() {
 		appG.Response(http.StatusOK, e.ERROR_REG_EMAIL_EXIST_FAIL, nil)
 		return
 	}
-	uid, _ := models.GetUUID(email)
-	user, err := models.AddUser(uid, name, email, pwd)
+
+	err := authService.Create()
 	if err != nil {
 		appG.Response(http.StatusOK, e.ERROR_REG_USER_FAIL, nil)
 		return
 	}
-	appG.Response(http.StatusOK, e.SUCCESS, user)
+	appG.Response(http.StatusOK, e.SUCCESS, "注册成功")
 }
 
-func AuthenticateUser(c *gin.Context) {
-	name := c.Query("nick_name")
+func Login(c *gin.Context) {
+	appG := app.Gin{c}
+
 	email := c.Query("email")
 	pwd := c.Query("password")
 
 	valid := validation.Validation{}
-	auth := models.AuthenticateRequest{
-		NickName: name,
-		Email:    email,
-		Password: pwd,
+	valid.Email(email, "email").Message("email 格式不正确")
+	valid.Required(pwd, "password").Message("密码不能为空")
+	if valid.HasErrors() {
+		app.MarkErrors(valid.Errors)
+		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+		return
 	}
-	ok, _ := valid.Valid(&auth)
-
-	data := make(map[string]interface{})
-	code := e.INVALID_PARAMS
-	if ok {
-		user, err := models.GetAuthenticateUser(auth)
-		if err != nil {
-			fmt.Errorf("fail to Authenticate User err : %v", err)
-		}
-
-		token, err := util.GenerateToken(user)
-		if err != nil {
-			code = e.ERROR_AUTH_TOKEN
-		} else {
-			data["token"] = token
-			data["user"] = user
-			code = e.SUCCESS
-		}
-	} else {
-		for _, err := range valid.Errors {
-			log.Println("---Error---", err.Key, err.Message)
-		}
+	authService := auth_service.User{
+		Email: email,
+		Pwd:   pwd,
+	}
+	user, err := authService.Find()
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR_LOGIN, nil)
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
-	})
+	token, err := util.GenerateToken(user)
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR_AUTH_TOKEN, nil)
+		return
+	}
+
+	loginResult := LoginResult{
+		User:  user,
+		Token: token,
+	}
+
+	appG.Response(http.StatusOK, e.SUCCESS, loginResult)
 }
-
-// func GetUser(c *gin.Context) {
-// 	id := com.StrTo(c.Param("id")).MustInt()
-// 	valid := validation.Validation{}
-// 	valid.Required(id, "id").Message("ID不能为空")
-// }
 
 func EditUser(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
@@ -126,3 +120,31 @@ func EditUser(c *gin.Context) {
 		"data": data,
 	})
 }
+
+// func AuthGitHub(c *gin.Context) {
+// 	auth.Config.CookieSecret = []byte("7H9xiimk2QdTdYI7rDddfJeV")
+// 	auth.Config.LoginSuccessRedirect = "/mainpage"
+// 	auth.Config.CookieSecure = false
+
+// 	githubHandler := auth.Github(setting.GitHubClientKey, setting.GitHubSecretKey, "user")
+// 	githubHandler.ServeHTTP(c.Writer, c.Request)
+
+// }
+
+// func GetInfo(c *gin.Context) {
+// 	auth.Config.CookieSecret = []byte("7H9xiimk2QdTdYI7rDddfJeV")
+// 	auth.Config.LoginSuccessRedirect = "/mainpage"
+// 	auth.Config.CookieSecure = false
+
+// 	user, err := auth.GetUserCookie(c.Request)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"msg":  "ok",
+// 		"user": user,
+// 	})
+// 	// fmt.Println("用户信息：", user.Picture(), user.Id(), user.Name())
+
+// }

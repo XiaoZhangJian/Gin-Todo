@@ -27,24 +27,27 @@ func CheckUser(email, password string) bool {
 	return false
 }
 
-func AddUser(Uid, name, email, password string) (User, error) {
+func AddUser(maps map[string]interface{}) error {
 	user := User{
-		Uid:      Uid,
-		NickName: name,
-		Email:    email,
-		Password: password,
+		Uid:      maps["uid"].(string),
+		NickName: maps["nick_name"].(string),
+		Email:    maps["email"].(string),
+		Password: maps["pwd"].(string),
 	}
 	err := db.Create(&user).Error
 	if err != nil {
-		return User{}, err
+		return err
 	}
-	return user, nil
+	return nil
 }
 
-func GetUser(id int) User {
+func GetUser(maps map[string]interface{}) (*User, error) {
 	user := User{}
-	db.Where("id = ?", id).Find(user)
-	return user
+	err := db.Where(maps).Find(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
 
 func EditUser(id int, data interface{}) bool {

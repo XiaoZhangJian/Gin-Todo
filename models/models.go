@@ -88,14 +88,3 @@ func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
 		scope.SetColumn("ModifiedAt", time.Now().Unix())
 	}
 }
-
-type AuthenticateRequest struct {
-	NickName string `json:"nick_name" valid:"MaxSize(26)"`
-	Email    string `json:"email" valid:"Email; MaxSize(50)"`
-	Password string `json:"password" valid:"Required; MaxSize(50)"`
-}
-
-type AuthenticateResponse struct {
-	User
-	Token string `json:"token"`
-}

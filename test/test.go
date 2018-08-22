@@ -66,7 +66,7 @@ func main() {
 	// }
 
 	// fmt.Printf("%v -> %v", numbers, hash)
-	fmt.Printf("%v ", NewId())
+	// fmt.Printf("%v ", NewId())
 
 	// if hash != "7nnhzEsDkiYa" {
 	// 	fmt.Println("hash does not match expected one")
