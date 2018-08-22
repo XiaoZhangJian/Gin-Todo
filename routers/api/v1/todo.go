@@ -13,9 +13,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 根据ID获取Todo
+// @Summary 根据ID获取Todo
 // @Produce  json
 // @Param id param string true "ID"
+// @Param token query string false "Token"
 // @Success 200 {string} json "{"code": 200,"data": {"todo": {"id": "e999d5a3-8f84-4812-8e57-0d66450a9aee","user_id": "jQFjVt6PtAp","name": "学习Golang","desc": "入门1","completed": false} },"msg": "ok"}"
 // @Router /api/v1/todos/{id} [get]
 func GetTodo(c *gin.Context) {
@@ -50,9 +51,10 @@ func GetTodo(c *gin.Context) {
 
 }
 
-// 获取该用户的全部Todo
+// @Summary 获取该用户的全部Todo
 // @Produce  json
 // @Param uid query string false "UserId"
+// @Param token query string false "Token"
 // @Success 200 {string} json "{"code":200,"data":{"lists":[{"id":"e999d5a3-8f84-4812-8e57-0d66450a9aee","user_id":"jQFjVt6PtAp","name":"学习Golang","desc":"入门1","completed":false},{"id":"ea85e87c-487e-4449-b9c2-8cd1e13c3a54","user_id":"jQFjVt6PtAp","name":"学习Golang","desc":"入门2","completed":false}],"total":2},"msg":"ok"}"
 // @Router /api/v1/todos [get]
 func GetTodos(c *gin.Context) {
@@ -96,6 +98,7 @@ func GetTodos(c *gin.Context) {
 // @Param uid query string false "UserId"
 // @Param name query string false "Name"
 // @Param desc query string false "Desc"
+// @Param token query string false "Token"
 // @Success 200 {string} json "{"code":200,"data":null,"msg":"ok"}"
 // @Router /api/v1/todos [post]
 func AddTodo(c *gin.Context) {
@@ -129,12 +132,13 @@ func AddTodo(c *gin.Context) {
 
 }
 
-//修改任务
+// @Summary 修改任务
 // @Produce json
 // @Param id param string false "Id"
 // @Param name query string false "Name"
 // @Param desc query string false "Desc"
 // @Param complete query string false "Completed"
+// @Param token query string false "Token"
 // @Success 200 {string} json "{"code":200,"data":null,"msg":"ok"}"
 // @Router /api/v1/todos/{id} [put]
 func EditTodo(c *gin.Context) {
@@ -173,9 +177,10 @@ func EditTodo(c *gin.Context) {
 
 }
 
-//删除任务
+// @Summary 删除任务
 // @Produce json
 // @Param id param string false "Id"
+// @Param token query string false "Token"
 // @Success 200 {string} json "{"code":200,"data":null,"msg":"ok"}"
 // @Router /api/v1/todos/{id} [delete]
 func DelTodo(c *gin.Context) {
