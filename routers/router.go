@@ -16,9 +16,6 @@ func InitRouter() *gin.Engine {
 	r.Use(gin.Recovery())
 	gin.SetMode(setting.RunMode)
 
-	// r.GET("/auth/login", api.AuthGitHub)
-	// r.GET("/mainpage", api.GetInfo)
-
 	r.GET("/login", api.Login)
 	r.POST("/reg", api.Register)
 
@@ -26,7 +23,6 @@ func InitRouter() *gin.Engine {
 	apiv1.Use(jwt.JWT())
 	{
 		// 用户操作
-		// apiv1.GET("/users/:id", api.GetUser)
 		// apiv1.PUT("/users/:id", api.EditUser)
 
 		//获取任务

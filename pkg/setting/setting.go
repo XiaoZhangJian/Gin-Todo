@@ -17,11 +17,6 @@ var (
 	JwtSecret    string
 	PageSize     int
 
-	LogSavePath     string
-	LogSaveName     string
-	LogFileExt      string
-	TimeFormat      string
-	RuntimeRootPath string
 	GitHubClientKey string
 	GitHubSecretKey string
 )
@@ -61,11 +56,7 @@ func LoadApp() {
 	}
 	JwtSecret = sec.Key("JWT_SECRET").MustString("!@#$!@#$!@#$!@#$")
 	PageSize = sec.Key("PAGE_SIZE").MustInt(10)
-	RuntimeRootPath = sec.Key("RuntimeRootPath").MustString("runtime/")
-	LogSavePath = sec.Key("LogSavePath").MustString("logs/")
-	LogSaveName = sec.Key("LogSaveName").MustString("log")
-	LogFileExt = sec.Key("LogFileExt").MustString("log")
-	TimeFormat = sec.Key("TimeFormat").MustString("20060102")
+
 	GitHubClientKey = sec.Key("GITHUB_CLIENT_KEY").String()
 	GitHubSecretKey = sec.Key("GITHUB_SECRET_KEY").String()
 

@@ -1,7 +1,6 @@
 package logging
 
 import (
-	"Gin-Todo/pkg/file"
 	"fmt"
 	"log"
 	"os"
@@ -30,14 +29,9 @@ const (
 	FATAL
 )
 
-func Setup() {
-	var err error
-	filePath := getLogFilePath()
-	fileName := getLogFileName()
-	F, err = file.MustOpen(fileName, filePath)
-	if err != nil {
-		log.Fatalln(err)
-	}
+func init() {
+	filePath := getLogFileFullPath()
+	F = openLogFile(filePath)
 
 	logger = log.New(F, DefaultPrefix, log.LstdFlags)
 }

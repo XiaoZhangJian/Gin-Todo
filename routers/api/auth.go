@@ -8,7 +8,6 @@ import (
 	"Gin-Todo/service/auth_service"
 	"net/http"
 
-	"github.com/Unknwon/com"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 )
@@ -89,62 +88,3 @@ func Login(c *gin.Context) {
 
 	appG.Response(http.StatusOK, e.SUCCESS, loginResult)
 }
-
-func EditUser(c *gin.Context) {
-	id := com.StrTo(c.Param("id")).MustInt()
-	name := c.Query("nick_name")
-	valid := validation.Validation{}
-	valid.Required(id, "id").Message("ID不能为空")
-	valid.Required(name, "name").Message("昵称不能为空")
-	code := e.INVALID_PARAMS
-
-	data := make(map[string]interface{})
-
-	if !valid.HasErrors() {
-		if models.ExistUserByID(id) {
-			data["nick_name"] = name
-			models.EditUser(id, data)
-			code = e.SUCCESS
-		} else {
-			code = e.ERROR_NOT_EXIST_USER
-		}
-	} else {
-		for _, err := range valid.Errors {
-			data["error"] = err.Message
-		}
-
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
-	})
-}
-
-// func AuthGitHub(c *gin.Context) {
-// 	auth.Config.CookieSecret = []byte("7H9xiimk2QdTdYI7rDddfJeV")
-// 	auth.Config.LoginSuccessRedirect = "/mainpage"
-// 	auth.Config.CookieSecure = false
-
-// 	githubHandler := auth.Github(setting.GitHubClientKey, setting.GitHubSecretKey, "user")
-// 	githubHandler.ServeHTTP(c.Writer, c.Request)
-
-// }
-
-// func GetInfo(c *gin.Context) {
-// 	auth.Config.CookieSecret = []byte("7H9xiimk2QdTdYI7rDddfJeV")
-// 	auth.Config.LoginSuccessRedirect = "/mainpage"
-// 	auth.Config.CookieSecure = false
-
-// 	user, err := auth.GetUserCookie(c.Request)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"msg":  "ok",
-// 		"user": user,
-// 	})
-// 	// fmt.Println("用户信息：", user.Picture(), user.Id(), user.Name())
-
-// }

@@ -58,7 +58,7 @@ func init() {
 	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
-	db.LogMode(true)
+	// db.LogMode(true)
 
 }
 

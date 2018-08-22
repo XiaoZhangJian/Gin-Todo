@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-
 	"Gin-Todo/pkg/setting"
 	"Gin-Todo/routers"
+	"fmt"
+	"net/http"
 )
 
 func main() {
